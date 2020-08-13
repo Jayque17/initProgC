@@ -8,6 +8,15 @@ typedef struct cellule{
 } Cellule, *Liste;
 
 
+typedef struct cellulemot{
+
+    char* mot;
+    struct cellulemot* suivant;
+
+} CelluleMot, *ListeMot;
+
+
+
 int NombreElement(Cellule* cell){
 
     /* Compléxité = O(n) */
@@ -205,4 +214,145 @@ int estTrieRec(Cellule* cell){
     }
 
     return estTrie(cell->suivant);
+}
+
+void concatene(Cellule* L1, Cellule* L2){
+
+    Cellule* ptL1 = L1;
+    while(ptL1->suivant != NULL){
+
+        ptL1 = ptL1->suivant;
+    }
+
+    ptL1->suivant = L2;
+    L2 = NULL;
+}
+
+Liste alloueCellule(int x){
+
+    Cellule* cell = (Cellule*) malloc(sizeof(Cellule));
+    cell->valeur = x;
+    cell->suivant = NULL;
+
+    return cell;
+}
+
+/* TODO */
+Liste extraitTete(Liste* l){}
+
+int insereTete(Liste* l, int x){
+
+    Cellule* cp = *l;
+    *l = alloueCellule(x);
+    if(*l == NULL){
+
+        return 0;
+    }
+    (*l)->suivant = cp;
+    cp = NULL;
+
+    return 1;
+}
+
+int insereApres(Liste *l, int x, int y){
+
+    Cellule* target = RechercheElement(*l, x);
+    if(target == NULL){
+
+        Cellule* cp = *l;
+
+        while(cp->suivant != NULL){
+            
+            cp = cp->suivant;
+        }
+
+        cp->suivant = alloueCellule(y);
+        if(cp->suivant == NULL){
+
+            return 0;
+        }
+    }
+
+    Cellule* cp = target->suivant;
+    target->suivant = alloueCellule(y);
+    if(target->suivant == NULL){
+
+        return 0;
+    }
+
+    target->suivant->suivant = cp;
+    cp = NULL;
+
+    return 1;
+}
+
+/* TODO */
+Liste extraitMin(Liste *l){}
+Cellule* duplique(Cellule* list){}
+
+/* TOCHECK */
+void libererListe(Liste* l){
+
+    if((*l)->suivant == NULL){
+        free(*l);
+    }
+    else{
+        libererListe(&(*l)->suivant);
+    }
+}
+
+/* TODO ex5.2 */
+
+ListeMot alloueCelluleMot(char* m){
+
+    CelluleMot* cellM = (CelluleMot*) malloc(sizeof(CelluleMot));
+    cellM->mot = (char*) malloc(sizeof(strlen(m)));
+    if(cellM->mot == NULL){
+
+        free(cellM);
+        return NULL;
+    }
+
+    cellM->mot = m;
+    cellM->suivant = NULL;
+    return cellM;
+}
+
+/* TODO ex5.4 */
+
+
+/* TOCHECK TODO */
+Cellule* Shuffle(Cellule** l1, Cellule** l2){
+
+    if(*l1 == NULL && *l2 == NULL){
+
+        return NULL;
+    }
+
+    /* TOCHECK */
+    Cellule* cp1; = (*l1)->suivant;
+    
+    while (*l2 != NULL)
+    {
+        if(cp1 == NULL && *l2 != NULL){
+
+            cp1 = *l2;
+            *l2 = NULL;
+        }
+
+        cp1 = *l2;
+
+
+
+        
+    }
+    
+
+
+
+    
+    
+    return *l1;
+
+
 }

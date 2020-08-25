@@ -330,7 +330,7 @@ Cellule* Shuffle(Cellule** l1, Cellule** l2){
     }
 
     /* TOCHECK */
-    Cellule* cp1; = (*l1)->suivant;
+    Cellule* cp1 = (*l1)->suivant;
     
     while (*l2 != NULL)
     {
@@ -340,19 +340,8 @@ Cellule* Shuffle(Cellule** l1, Cellule** l2){
             *l2 = NULL;
         }
 
-        cp1 = *l2;
-
-
-
-        
+        cp1 = *l2;        
     }
-    
-
-
-
-    
-    
+ 
     return *l1;
-
-
 }

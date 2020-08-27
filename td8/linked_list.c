@@ -278,7 +278,32 @@ int estTrieRecc(Cellule* cell){
 }
 
 /* TO DO */
-/* functions who returns number of differents elements in list (iter & recc)*/
+/* functions who returns number of differents elements in list (recc)*/
+
+int countDiffElemIter(Liste lst){
+
+    if(lst == NULL){
+
+        return 0;
+    }
+
+    Cellule* cell = NULL;
+    cell = lst;
+
+    int nbElem = 0;
+
+    while(cell != NULL){
+
+        if(RechercheElement(cell->suivant, cell->valeur) == NULL){
+
+            nbElem += 1;
+        }
+
+        cell = cell->suivant;
+    }
+
+    return nbElem;
+}
 
 /* Exercice 2 */
 
@@ -370,8 +395,11 @@ void afficheListe(Liste L){
         printf("%d ", L->valeur);
         afficheListe(L->suivant);
     }
-
-    printf("\n");
+    
+    else{
+     
+        printf("\n");
+    }
 }
 
 void afficheListeMot(ListeMot L){
@@ -478,7 +506,7 @@ int main(void){
     list2 = alloueCellule(10);
     list2->suivant = alloueCellule(20);
     list2->suivant->suivant = alloueCellule(0);
-    list2->suivant->suivant->suivant = alloueCellule(40);
+    list2->suivant->suivant->suivant = alloueCellule(4);
     list2->suivant->suivant->suivant->suivant = alloueCellule(50);
 
     printf("list2\n");
@@ -488,6 +516,7 @@ int main(void){
 
     printf("list1\n");
     afficheListe(list1);
+    printf("nombre éléments différents : %d\n", countDiffElemIter(list1));
 
     printf("list2\n");
     afficheListe(list2);

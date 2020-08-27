@@ -62,10 +62,13 @@ ListeMot libererListeMot(ListeMot* l){
         return *l;
     }
 
+
+    if(((*l)->mot) != NULL){
     free((*l)->mot); /* free caca */
+    }
     if((*l)->suivant != NULL){
   
-        libererListeMot(&(*l)->suivant);
+        libererListeMot(&((*l)->suivant));
     }
 
     
@@ -281,13 +284,23 @@ int estTrieRecc(Cellule* cell){
 
 void concatene(Cellule** L1, Cellule** L2){
 
-    Cellule** ptL1 = L1;
-    while((*ptL1)->suivant != NULL){
-
-        ptL1 = &(*ptL1)->suivant;
+    if(*L1 == NULL && *L2 != NULL){
+        
+        *L1 = *L2;
     }
 
-    (*ptL1)->suivant = *L2;
+    else{
+
+        Cellule** ptL1 = L1;
+
+        while((*ptL1)->suivant != NULL){
+
+            ptL1 = &(*ptL1)->suivant;
+        }
+
+        (*ptL1)->suivant = *L2;
+    }
+
     *L2 = NULL;
 }
 
@@ -371,8 +384,30 @@ void afficheListeMot(ListeMot L){
     printf("\n");
 }
 
-/* TODO */
-Liste extraitMin(Liste *l);
+Liste extraitMin(Liste *l){
+
+    if(*l == NULL){
+
+        return *l;
+    }
+
+    Cellule* cell = *l;
+    Cellule* min = RechercheMin(*l);
+    if(min == cell){
+
+        return extraitTete(l);
+    }
+
+    while(cell->suivant != min){
+
+        cell = cell->suivant;
+    }
+
+    cell->suivant = min->suivant;
+    min->suivant = NULL;
+
+    return min;
+}
 
 /* Exercice 5 */
 /* Sur les fonctions précedentes, il faut changer le type de retour et les types
@@ -380,7 +415,14 @@ passés en paramètres. */
 
 ListeMot alloueCelluleMot(char* m){
 
-    CelluleMot* cellM = (CelluleMot*) malloc(sizeof(CelluleMot));
+    CelluleMot* cellM = NULL;
+    cellM = (CelluleMot*) malloc(sizeof(CelluleMot));
+    if(cellM == NULL){
+
+        return cellM;
+    }
+    
+    cellM->mot = NULL;
     cellM->mot = (char*) malloc(sizeof(strlen(m)));
     if(cellM->mot == NULL){
 
@@ -388,26 +430,82 @@ ListeMot alloueCelluleMot(char* m){
         return NULL;
     }
 
-    cellM->mot = m;
+    strcpy(cellM->mot, m);
     cellM->suivant = NULL;
     return cellM;
 }
 
+/* TODO fct d'insertion sans répétition. */
+
+Liste Shuffle(Liste* l1, Liste* l2){
+
+    Cellule* cp_l1 = *l1;
+
+    while(cp_l1 != NULL && *l2 != NULL){
+        
+        Cellule* tmp = cp_l1->suivant;
+        cp_l1->suivant = extraitTete(l2);
+        cp_l1 = cp_l1->suivant;
+        cp_l1->suivant = tmp;
+        cp_l1 = cp_l1->suivant;
+    }
+
+    if(cp_l1 == NULL && *l2 != NULL){
+
+        concatene(l1, l2);
+    }
+
+    return *l1;
+}
 
 /* MAIN */
 
 int main(void){
 
-    CelluleMot* cell1 = NULL;
+    Liste list1 = NULL;
+    Liste list2 = NULL;
+    Cellule* cell = NULL;
 
-    cell1 = alloueCelluleMot("noel");
-    cell1->suivant = alloueCelluleMot("social");
-    cell1->suivant->suivant = alloueCelluleMot("saint");
+    list1 = alloueCellule(57);
+    list1->suivant = alloueCellule(2);
+    list1->suivant->suivant = alloueCellule(3);
+    list1->suivant->suivant->suivant = alloueCellule(4);
+    list1->suivant->suivant->suivant->suivant = alloueCellule(5);
 
-    afficheListeMot(cell1);
+    printf("list1\n");
+    afficheListe(list1);
 
-    /* erreur */
-    libererListeMot(&cell1);
-    
+    list2 = alloueCellule(10);
+    list2->suivant = alloueCellule(20);
+    list2->suivant->suivant = alloueCellule(0);
+    list2->suivant->suivant->suivant = alloueCellule(40);
+    list2->suivant->suivant->suivant->suivant = alloueCellule(50);
+
+    printf("list2\n");
+    afficheListe(list2);
+
+    list1 = Shuffle(&list1, &list2);
+
+    printf("list1\n");
+    afficheListe(list1);
+
+    printf("list2\n");
+    afficheListe(list2);
+
+    cell = extraitMin(&list1);
+
+    printf("min\n");
+    afficheListe(cell);
+
+    printf("list1\n");
+    afficheListe(list1);
+
+    printf("list2\n");
+    afficheListe(list2);
+
+    libererListe(&list1);
+    libererListe(&list2);
+    libererListe(&cell);
+
     return 0;
 }
